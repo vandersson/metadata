@@ -20,10 +20,11 @@ public class PlaylistStitcher {
         return state.readState();
     }
 
-    public void addToPlaylist(URI source, String cameraOperator) throws PersistenceFailed {
+    public void addToPlaylist(URI source, String cameraOperator) throws PersistenceFailed, RetreivalFailed {
         Playlist savedPlaylist = state.readState();
 
         Camera camera = new Camera();
+        //fetch actual camera data
         Playlist importBatch = metadataExtractor.extractFromDirectory(source, camera);
 
         Playlist combinedPlaylist = savedPlaylist.mergePlaylists(importBatch);

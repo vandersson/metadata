@@ -25,6 +25,7 @@ public class JsonFilePlaylist implements PersistentPlaylist {
             Playlist savedPlaylist = new Playlist();
             if (Files.exists(Paths.get(FILE_LOCATION))) {
                 savedPlaylist = mapper.readValue(new File(FILE_LOCATION), Playlist.class);
+
             }
             return savedPlaylist;
         } catch (IOException e) {
@@ -34,6 +35,11 @@ public class JsonFilePlaylist implements PersistentPlaylist {
 
     @Override
     public void saveState(Playlist playlist) throws PersistenceFailed {
+        try {
+            mapper.writeValue(new File(FILE_LOCATION), playlist);
+        } catch (IOException e) {
 
+            throw new PersistenceFailed(e);
+        }
     }
 }
