@@ -1,9 +1,11 @@
 package afterski.metadata.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Optional;
 
 
 /**
@@ -12,17 +14,31 @@ import java.util.Optional;
 public class Video implements Comparable<Video> {
     private URI fileSystemLocation;
     private Instant creationTime;
-    private Optional<Instant> normalizedStartTime = Optional.empty();
+    private Instant normalizedStartTime;
     private Duration length;
     private String author;
 
     public Video() {
     }
 
-    public Video(URI fileSystemLocation, Instant creationTime, Duration length, String author) {
+    public Video(URI fileSystemLocation, Instant creationTime, Duration length, Camera camera) {
         this.fileSystemLocation = fileSystemLocation;
         this.creationTime = creationTime;
+        this.normalizedStartTime = creationTime.plus(camera.getOffset());
         this.length = length;
+        this.author = camera.getOperator();
+    }
+
+    @JsonCreator
+    public Video(@JsonProperty("fileSystemLocation") URI fileSystemLocation,
+                 @JsonProperty("creationTimestamp") long creationTime,
+                 @JsonProperty("normalizedStartTimestamp") long normalizedStartTime,
+                 @JsonProperty("lengthInMillis") long length,
+                 @JsonProperty("author")String author) {
+        this.fileSystemLocation = fileSystemLocation;
+        this.creationTime = Instant.ofEpochMilli(creationTime);
+        this.normalizedStartTime = Instant.ofEpochMilli(normalizedStartTime);
+        this.length = Duration.ofMillis(length);
         this.author = author;
     }
 
@@ -30,16 +46,16 @@ public class Video implements Comparable<Video> {
         return fileSystemLocation;
     }
 
-    public Instant getCreationTime() {
-        return creationTime;
+    public long getCreationTimestamp() {
+        return creationTime.toEpochMilli();
     }
 
-    public Duration getLength() {
-        return length;
+    public long getLengthInMillis() {
+        return length.toMillis();
     }
 
-    public Instant getNormalizedStartTime() {
-        return normalizedStartTime.orElse(creationTime);
+    public long getNormalizedStartTimestamp() {
+        return normalizedStartTime.toEpochMilli();
     }
 
     public String getAuthor() {
@@ -48,6 +64,6 @@ public class Video implements Comparable<Video> {
 
     @Override
     public int compareTo(Video o) {
-        return getNormalizedStartTime().compareTo(o.getNormalizedStartTime());
+        return normalizedStartTime.compareTo(o.normalizedStartTime);
     }
 }

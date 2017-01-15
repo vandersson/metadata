@@ -1,10 +1,10 @@
 [
   {
-    "person": "Monika",
+    "operator": "Monika",
     "millis_offset": -21000
   },
   {
-    "person": "David",
+    "operator": "David",
     "millis_offset": 0
   }
 ]

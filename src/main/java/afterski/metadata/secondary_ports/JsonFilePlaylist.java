@@ -3,6 +3,7 @@ package afterski.metadata.secondary_ports;
 import afterski.metadata.domain.PersistenceFailed;
 import afterski.metadata.domain.PersistentPlaylist;
 import afterski.metadata.domain.Playlist;
+import afterski.metadata.domain.RetreivalFailed;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
@@ -20,16 +21,15 @@ public class JsonFilePlaylist implements PersistentPlaylist {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Playlist readState() throws PersistenceFailed {
+    public Playlist readState() throws RetreivalFailed {
         try {
             Playlist savedPlaylist = new Playlist();
             if (Files.exists(Paths.get(FILE_LOCATION))) {
                 savedPlaylist = mapper.readValue(new File(FILE_LOCATION), Playlist.class);
-
             }
             return savedPlaylist;
         } catch (IOException e) {
-            throw new PersistenceFailed(e);
+            throw new RetreivalFailed(e);
         }
     }
 

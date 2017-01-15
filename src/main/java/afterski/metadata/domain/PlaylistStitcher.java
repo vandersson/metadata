@@ -16,14 +16,18 @@ public class PlaylistStitcher {
     @Autowired
     private MetadataExtractor metadataExtractor;
 
-    public Playlist sortedPlaylist() throws PersistenceFailed {
+    @Autowired
+    private CameraMetadata cameraMetadata;
+
+
+    public Playlist sortedPlaylist() throws RetreivalFailed {
         return state.readState();
     }
 
     public void addToPlaylist(URI source, String cameraOperator) throws PersistenceFailed, RetreivalFailed {
         Playlist savedPlaylist = state.readState();
 
-        Camera camera = new Camera();
+        Camera camera = cameraMetadata.cameras().getOrDefault(cameraOperator, new Camera(cameraOperator));
         //fetch actual camera data
         Playlist importBatch = metadataExtractor.extractFromDirectory(source, camera);
 

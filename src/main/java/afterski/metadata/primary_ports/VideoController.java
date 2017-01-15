@@ -27,7 +27,7 @@ public class VideoController {
 
     @RequestMapping(value = "/videos", method = RequestMethod.GET)
     @ResponseBody
-    public Playlist sortedPlaylist() throws PersistenceFailed {
+    public Playlist sortedPlaylist() throws RetreivalFailed {
         logger.debug("get /videos entered");
         return playlistService.sortedPlaylist();
     }

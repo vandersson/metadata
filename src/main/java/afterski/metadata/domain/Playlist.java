@@ -10,6 +10,9 @@ import java.util.List;
 public class Playlist {
     private List<Video> videos = new ArrayList<>();
 
+    public Playlist() {
+    }
+
     public void insertVideo(Video video) {
         videos.add(video);
     }

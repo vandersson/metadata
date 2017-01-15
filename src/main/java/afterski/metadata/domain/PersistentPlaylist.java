@@ -5,7 +5,7 @@ package afterski.metadata.domain;
  */
 public interface PersistentPlaylist {
 
-    Playlist readState() throws PersistenceFailed;
+    Playlist readState() throws RetreivalFailed;
 
     void saveState(Playlist playlist) throws PersistenceFailed;
 }
