@@ -7,12 +7,20 @@ import afterski.metadata.domain.RetreivalFailed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.FileNotFoundException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 /**
@@ -37,5 +45,15 @@ public class VideoController {
         logger.debug(importSource.toString());
         playlistService.addToPlaylist(importSource.getDestination(), importSource.getCameraOperator());
         return ResponseEntity.ok("ok");
+    }
+
+    @RequestMapping(value = "/video", method = RequestMethod.GET, produces = "video/mp4")
+    @ResponseBody
+    public FileSystemResource fetchVideo(@RequestParam String v) throws FileNotFoundException {
+        Path videoPath = Paths.get(URI.create(v));
+        if (Files.notExists(videoPath)) {
+            throw new FileNotFoundException("Video not found");
+        }
+        return new FileSystemResource(videoPath.toFile());
     }
 }
