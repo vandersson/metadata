@@ -28,7 +28,7 @@ import java.nio.file.Paths;
  * @Author: vda
  */
 @Controller
-@CrossOrigin(origins = "localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")
 public class VideoController {
     private static Logger logger = LoggerFactory.getLogger(VideoController.class);
 
