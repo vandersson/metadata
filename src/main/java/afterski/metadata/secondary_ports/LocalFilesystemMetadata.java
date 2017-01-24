@@ -40,9 +40,10 @@ public class LocalFilesystemMetadata implements MetadataExtractor {
         IsoFile isoFile = new IsoFile(videoFile.toString());
 
         MovieHeaderBox nam = isoFile.getMovieBox().getMovieHeaderBox();
+        double durationInSeconds = ((double)nam.getDuration())/((double)nam.getTimescale());
         Video vid = new Video(videoFile.toUri(),
                 nam.getCreationTime().toInstant(),
-                Duration.ofMillis(nam.getDuration()),
+                Duration.ofMillis((long)(durationInSeconds * 1000)),
                 camera);
         isoFile.close();
         return vid;
